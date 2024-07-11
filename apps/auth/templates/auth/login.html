@@ -1,0 +1,44 @@
+{% extends 'auth/base.html' %}
+
+{% block title %}
+    로그인
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('auth.static', filename='login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ url_for('auth.login') }}" method="post" novalidate="novalidate">
+        <h1>로그인</h1>
+
+        {% for message in get_flashed_messages() %}
+        <p class="flash-message">{{ message }}</p>
+        {% endfor %}
+        
+        {{ form.csrf_token }}
+        
+        <div class="input-group">
+            {{ form.email.label }}
+            {{ form.email(placeholder='메일주소') }}
+            {% for error in form.email.errors %}
+            <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="input-group">
+            {{ form.password.label }}
+            {{ form.password(placeholder='비밀번호') }}
+            {% for error in form.password.errors %}
+            <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="input-group">
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock %}

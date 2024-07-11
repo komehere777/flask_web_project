@@ -1,0 +1,204 @@
+{% extends 'crud/base.html' %}
+
+{% block title %}사용자 목록{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('crud.static', filename='crud_index.css') }}">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1877f2;
+            text-decoration: none;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .username {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        .logout-btn {
+            background-color: #e4e6eb;
+            color: #050505;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #d8dadf;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #1877f2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e4e6eb;
+        }
+        th {
+            background-color: #1877f2;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        tr:hover {
+            background-color: #f5f6f7;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background-color: #1877f2;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #166fe5;
+        }
+        .btn-edit {
+            background-color: #42b72a;
+            color: white;
+        }
+        .btn-edit:hover {
+            background-color: #36a420;
+        }
+        .btn-danger {
+            background-color: #ed4956;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c13584;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .user-info {
+                margin-top: 15px;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                margin-bottom: 15px;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <header class="header">
+        
+    </header>
+
+    <div class="container">
+        <h1>사용자 목록</h1>
+        <div class="top-actions">
+            <a href="{{ url_for('crud.create_user') }}" class="btn btn-primary">신규 사용자 작성</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>사용자명</th>
+                    <th>메일 주소</th>
+                    <th>작업</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td data-label="사용자명">{{ user.username }}</td>
+                    <td data-label="메일 주소">{{ user.email }}</td>
+                    <td data-label="작업" class="action-buttons">
+                        <a href="{{ url_for('crud.edit_user', user_id=user.id) }}" class="btn btn-edit">편집</a>
+                        <form action="{{ url_for('crud.delete_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
