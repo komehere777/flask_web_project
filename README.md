@@ -1,7 +1,7 @@
 # flask_web_project
 
 ## Project setup
-
+터미널 열기 > command prompt 실행
 ```python
 where python #3.10으로 설정
 python -m venv venv
