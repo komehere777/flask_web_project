@@ -15,6 +15,12 @@ FLASK_APP=apps.app:create_app('local')
 FLASK_ENV=development
 FLASK_DEBUG=1
 ```
+시크릿키 추가
+```python
+class BaseConfig:
+    SECRET_KEY = ''
+    WTF_CSRF_SECRET_KEY = ''
+```
 
 ## Project run
 
