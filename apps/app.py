@@ -43,5 +43,8 @@ def create_app(config_key):
 
     from apps.auth import views as auth_views
     app.register_blueprint(auth_views.auth, url_prefix='/auth')
+    
+    from apps.main import views as main_views
+    app.register_blueprint(main_views.main, url_prefix='/')
 
     return app
