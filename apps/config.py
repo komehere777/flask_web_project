@@ -5,8 +5,8 @@ basedir = Path(__file__).parent.parent
 
 
 class BaseConfig:
-    SECRET_KEY = '32dsldglkalsdgjslgslg'
-    WTF_CSRF_SECRET_KEY = 'ASLsglslk23lksglkslg'
+    SECRET_KEY = ''
+    WTF_CSRF_SECRET_KEY = ''
 
 
 class LocalConfig(BaseConfig):
