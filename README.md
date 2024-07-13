@@ -25,6 +25,14 @@ class BaseConfig:
     SECRET_KEY = ''
     WTF_CSRF_SECRET_KEY = ''
 ```
+## flask db setting
+
+```python
+flask db init
+flask db migrate
+flask db upgrade
+```
+
 
 ## Project run
 
