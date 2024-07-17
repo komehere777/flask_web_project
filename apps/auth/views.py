@@ -42,7 +42,7 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
             if user.is_Admin:
-                return redirect(url_for('crud.users'))
+                return redirect(url_for('main.index'))
             else:
                 return redirect(url_for('main.index'))
         flash('이메일 또는 비밀번호가 올바르지 않습니다.')
