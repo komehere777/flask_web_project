@@ -29,7 +29,7 @@ def signup():
         login_user(user)
         next_ = request.args.get('next')
         if next_ is None or not next_.startswith('/'):
-            next_ = url_for('crud.users')
+            next_ = url_for('main.index')
         return redirect(next_)
     return render_template('auth/signup.html', form=form)
 

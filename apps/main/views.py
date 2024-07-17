@@ -1,3 +1,5 @@
+# main/views.py
+
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user
 from apps.main.models import Product
@@ -6,8 +8,34 @@ from apps.app import db
 from apps.main.forms import ModelCapacityForm, EmptyForm  # CSRF 토큰을 위한 빈 폼
 import pandas as pd
 import requests
+import urllib.parse
 
 main = Blueprint("main", __name__, template_folder="templates", static_folder="static")
+
+
+def normalize_name(name):
+    return name.replace(" ", "").replace("-", "").replace("_", "").lower()
+
+
+def dataframe_to_html(df):
+    html = '<table class="table table-striped">\n'
+    html += "<thead>\n<tr>"
+    for column in df.columns:
+        html += f"<th>{column}</th>"
+    html += "</tr>\n</thead>\n<tbody>\n"
+
+    for _, row in df.iterrows():
+        html += f'<tr data-product-id="{row["pid"]}">'
+        for column in df.columns:
+            value = row[column]
+            if column == "product_image":
+                html += f'<td><img src="{value}" alt="Product Image" width="100"></td>'
+            else:
+                html += f"<td>{value}</td>"
+        html += "</tr>\n"
+
+    html += "</tbody>\n</table>"
+    return html
 
 
 @main.route("/", methods=["GET", "POST"])
@@ -21,11 +49,7 @@ def index():
         capacity = request.form.get("capacitySelect")
         query["model"] = model
         query["capacity"] = capacity
-        print(query)
-        # query를 값만 연결된 문자열로 변환
         query_str = " ".join([f"{value}" for key, value in query.items()])
-        print(query_str)
-        # GB 제거 replace
         query_str = query_str.replace("GB", "")
         columns = [
             "category_id",
@@ -37,32 +61,21 @@ def index():
             "location",
         ]
 
-        # 검색시작
+        # 검색 시작
         try:
             url = f"https://api.bunjang.co.kr/api/1/find_v2.json?q={query_str}&order=score&page=1&request_id=2024704081724&f_category_id=600700001&stat_device=w&n=100&stat_category_required=1&req_ref=search&version=5"
-            # Request API
             response = requests.get(url)
             data = response.json()
-
             ipdf = pd.DataFrame(data["list"])[columns]
-
-            # product_image 컬럼을 이미지 태그로 변환
-            ipdf["product_image"] = ipdf["product_image"].apply(
-                lambda x: (
-                    f'<img src="{x}" alt="Product Image" width="100">'
-                    if pd.notnull(x)
-                    else ""
-                )
-            )
-
         except Exception as e:
             print(f"검색어 입력오류: {e}")
             ipdf = pd.DataFrame(columns=columns)
 
         # nan값 제거
         ipdf = ipdf.dropna(subset=["location", "name", "price"])
+        ipdf = ipdf[ipdf["location"] != ""]
 
-        # 제외어
+        # 제외어 필터링
         exclude_keywords = [
             "교환",
             "매입",
@@ -79,15 +92,22 @@ def index():
             ipdf = ipdf[~ipdf["name"].str.contains(keyword, na=False)]
 
         # name price product_image location update_time 만 사용
-        ipdf = ipdf[["name", "price", "product_image", "location", "update_time"]]
-        ipdf["update_time"] = ipdf["update_time"].sort_values(ascending=False)
+        ipdf = ipdf[
+            ["pid", "name", "price", "product_image", "location", "update_time"]
+        ]
+        ipdf["update_time"] = (
+            ipdf["update_time"].astype(str).sort_values(ascending=False)
+        )
 
         # 데이터베이스에 저장
         for index, row in ipdf.iterrows():
             product = Product(
-                NAME=row["name"],
+                PID=row["pid"],
+                NAME=normalize_name(row["name"]),
                 PRICE=row["price"],
-                PRODUCT_IMAGE=row["product_image"],
+                PRODUCT_IMAGE=urllib.parse.unquote(
+                    row["product_image"]
+                ),  # URL 디코딩하여 저장
                 LOCATION=row["location"],
                 DELTA_TIME=row["update_time"],
             )
@@ -95,16 +115,14 @@ def index():
         db.session.commit()
 
         # HTML 변환
-        ipdf_html = ipdf.to_html(
-            classes="table table-striped", index=False, escape=False
-        )
+        ipdf_html = dataframe_to_html(ipdf)
 
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return jsonify(
                 success=True, model=model, capacity=capacity, table=ipdf_html
             )
 
-    products = Product.query.limit(5).all()  # 상위 5개의 제품만 가져옵니다.
+    products = Product.query.limit(5).all()
     return render_template(
         "main/index.html",
         products=products,
@@ -114,10 +132,14 @@ def index():
     )
 
 
-@main.route("/product/<int:product_id>")
+@main.route("/product/<int:pid>")
 @login_required
-def product_detail(product_id):
-    product = Product.query.get_or_404(product_id)
+def product_detail(pid):
+    product = Product.query.filter_by(PID=pid).first()
+    print(f'프로덕트 디테일 확인 콘솔:{product}')
+    if product is None:
+        flash("Product not found.")
+        return redirect(url_for("main.index"))
     form = EmptyForm()
     return render_template(
         "main/product_detail.html", product=product, user=current_user, form=form
@@ -141,13 +163,13 @@ def add_to_wishlist(product_id):
             flash("Product added to wishlist.")
     else:
         flash("Invalid CSRF token")
-    return redirect(url_for("main.product_detail", product_id=product_id))
+    return redirect(url_for("main.product_detail", pid=product_id))
 
 
-@main.route("/api/get_product_id")
-def get_product_id():
-    product_name = request.args.get("name")
-    product = Product.query.filter_by(NAME=product_name).first()
+@main.route("/api/get_product_pid")
+def get_product_pid():
+    pid = request.args.get("pid")
+    product = Product.query.filter(Product.PID == pid).first()
     if product:
         return jsonify({"id": product.ID})
     return jsonify({"error": "Product not found"}), 404

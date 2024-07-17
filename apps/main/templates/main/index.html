@@ -29,7 +29,8 @@
 {% if ipdf_html %}
 <h2>검색 결과</h2>
 <div class="table-responsive">
-    {{ ipdf_html | safe }}
+    {#{ ipdf_html | safe }#}
+    {{ ipdf_html }}
 </div>
 {% else %}
 <h2 id="productListTitle">Top 5 Product List</h2>
@@ -45,7 +46,7 @@
     </thead>
     <tbody>
         {% for product in products %}
-        <tr onclick="window.location='{{ url_for('main.product_detail', product_id=product.ID) }}';" style="cursor:pointer;">
+        <tr onclick="window.location='{{ url_for('main.product_detail', pid=product.PID) }}';" style="cursor:pointer;">
             <td>{{ product.NAME }}</td>
             <td>{{ product.PRICE }}</td>
             <td><img src="{{ product.PRODUCT_IMAGE }}" alt="Product Image" width="100"></td>
@@ -129,18 +130,15 @@
                 document.getElementById("selectedValues").innerHTML = `<p>선택된 모델: ${data.model}</p><p>선택된 용량: ${data.capacity}</p>`;
                 document.getElementById("selectedValues").innerHTML += data.table;
 
-                // 검색 결과에 ID를 추가하고 클릭 이벤트를 설정합니다.
+                // 검색 결과에 클릭 이벤트를 설정합니다.
                 const productRows = document.querySelectorAll('#selectedValues table tbody tr');
                 productRows.forEach(row => {
-                    const productName = row.cells[0].textContent.trim();
-                    fetch(`/api/get_product_id?name=${encodeURIComponent(productName)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            row.setAttribute('data-product-id', data.id);
-                            row.onclick = function() {
-                                window.location = `/product/${data.id}`;
-                            };
-                        });
+                    row.addEventListener('click', function() {
+                        const productId = row.getAttribute('data-product-id');
+                        if (productId) {
+                            window.location.href = `/main/product/${productId}`;
+                        }
+                    });
                 });
 
             } else {
@@ -158,5 +156,7 @@
         document.getElementById("modelSelect").addEventListener("change", populateCapacities);
     }
 </script>
+
+
 
 {% endblock %}
