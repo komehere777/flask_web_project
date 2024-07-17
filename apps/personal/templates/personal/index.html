@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<h1>User Profile</h1>
+<table class="table table-striped">
+    <tr>
+        <th>Username</th>
+        <td>{{ user.username }}</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>{{ user.email }}</td>
+    </tr>
+</table>
+<a href="{{ url_for('personal.edit_user') }}" class="btn btn-primary">Edit Profile</a>
+<h2>Wishlist</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Product Image</th>
+            <th>Location</th>
+            <th>Delta Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in wishlist_items %}
+        <tr>
+            <td>{{ item.product.NAME }}</td>
+            <td>{{ item.product.PRICE }}</td>
+            <td><img src="{{ item.product.PRODUCT_IMAGE }}" alt="Product Image" width="100"></td>
+            <td>{{ item.product.LOCATION }}</td>
+            <td>{{ item.product.DELTA_TIME }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

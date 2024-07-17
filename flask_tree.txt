@@ -1,0 +1,79 @@
+
+D:.
+¦¢  
+¦§¦¡.venv
+¦¢     
+¦§¦¡apps
+¦¢  ¦¢  app.py
+¦¢  ¦¢  config.py
+¦¢  ¦¢  
+¦¢  ¦§¦¡auth
+¦¢  ¦¢  ¦¢  forms.py
+¦¢  ¦¢  ¦¢  views.py
+¦¢  ¦¢  ¦¢  __init__.py
+¦¢  ¦¢  ¦¢  
+¦¢  ¦¢  ¦§¦¡static
+¦¢  ¦¢  ¦¢      login.css
+¦¢  ¦¢  ¦¢      signup.css
+¦¢  ¦¢  ¦¢      
+¦¢  ¦¢  ¦§¦¡templates
+¦¢  ¦¢  ¦¢  ¦¦¦¡auth
+¦¢  ¦¢  ¦¢          base.html
+¦¢  ¦¢  ¦¢          index.html
+¦¢  ¦¢  ¦¢          login.html
+¦¢  ¦¢  ¦¢          signup.html
+¦¢  ¦¢  ¦¢          
+¦¢  ¦¢          
+¦¢  ¦§¦¡crud
+¦¢  ¦¢  ¦¢  forms.py
+¦¢  ¦¢  ¦¢  models.py
+¦¢  ¦¢  ¦¢  views.py
+¦¢  ¦¢  ¦¢  __init__.py
+¦¢  ¦¢  ¦¢  
+¦¢  ¦¢  ¦§¦¡static
+¦¢  ¦¢  ¦¢      crud_create.css
+¦¢  ¦¢  ¦¢      crud_index.css
+¦¢  ¦¢  ¦¢      style.css
+¦¢  ¦¢  ¦¢      
+¦¢  ¦¢  ¦§¦¡templates
+¦¢  ¦¢  ¦¢  ¦¦¦¡crud
+¦¢  ¦¢            base.html
+¦¢  ¦¢            create.html
+¦¢  ¦¢            edit.html
+¦¢  ¦¢            index.html
+¦¢  ¦¢  
+¦¢  ¦¢          
+¦¢  ¦§¦¡main
+¦¢  ¦¢  ¦¢  forms.py
+¦¢  ¦¢  ¦¢  models.py
+¦¢  ¦¢  ¦¢  views.py
+¦¢  ¦¢  ¦¢  __init__.py
+¦¢  ¦¢  ¦¢  
+¦¢  ¦¢  ¦§¦¡static
+¦¢  ¦¢  ¦¢      style.css
+¦¢  ¦¢  ¦¢      
+¦¢  ¦¢  ¦§¦¡templates
+¦¢  ¦¢    ¦¦¦¡main
+¦¢  ¦¢            index.html
+¦¢  ¦¢            product_detail.html
+¦¢  ¦¢            
+¦¢  ¦¢            
+¦¢  ¦§¦¡personal
+¦¢  ¦¢  ¦¢  forms.py
+¦¢  ¦¢  ¦¢  models.py
+¦¢  ¦¢  ¦¢  views.py
+¦¢  ¦¢  ¦¢  __init__.py
+¦¢  ¦¢  ¦¢  
+¦¢  ¦¢  ¦§¦¡static
+¦¢  ¦¢  ¦§¦¡templates
+¦¢  ¦¢  ¦¢  ¦¦¦¡personal
+¦¢  ¦¢            edit_user.html
+¦¢  ¦¢            index.html
+¦¢  ¦¢            
+¦¢  ¦¢          
+¦¢  ¦§¦¡templates
+¦¢        base.html
+¦¢          
+¦¦¦¡migrations
+    
+            

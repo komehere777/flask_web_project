@@ -11,46 +11,6 @@
             padding: 0;
             background-color: #f0f2f5;
         }
-        .header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1877f2;
-            text-decoration: none;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-        .username {
-            margin-right: 15px;
-            font-weight: 500;
-        }
-        .logout-btn {
-            background-color: #e4e6eb;
-            color: #050505;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        .logout-btn:hover {
-            background-color: #d8dadf;
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -130,13 +90,6 @@
             gap: 8px;
         }
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .user-info {
-                margin-top: 15px;
-            }
             table, thead, tbody, th, td, tr {
                 display: block;
             }
@@ -167,10 +120,6 @@
 {% endblock %}
 
 {% block content %}
-    <header class="header">
-        
-    </header>
-
     <div class="container">
         <h1>사용자 목록</h1>
         <div class="top-actions">

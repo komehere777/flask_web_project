@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Product Detail{% endblock %}
+
+{% block content %}
+<h1>Product Detail</h1>
+<table class="table table-striped">
+    <tr>
+        <th>Name</th>
+        <td>{{ product.NAME }}</td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>{{ product.PRICE }}</td>
+    </tr>
+    <tr>
+        <th>Product Image</th>
+        <td><img src="{{ product.PRODUCT_IMAGE }}" alt="Product Image" width="200"></td>
+    </tr>
+    <tr>
+        <th>Location</th>
+        <td>{{ product.LOCATION }}</td>
+    </tr>
+    <tr>
+        <th>Delta Time</th>
+        <td>{{ product.DELTA_TIME }}</td>
+    </tr>
+</table>
+<form method="POST" action="{{ url_for('main.add_to_wishlist', product_id=product.ID) }}">
+    {{ form.hidden_tag() }}
+    <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+</form>
+<a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Product List</a>
+{% endblock %}

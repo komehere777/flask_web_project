@@ -11,7 +11,7 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-login_manager.login_message = '정상 로그인 되었습니다.'
+login_manager.login_message = ''
 
 
 def create_app(config_key):
@@ -45,6 +45,10 @@ def create_app(config_key):
     app.register_blueprint(auth_views.auth, url_prefix='/auth')
     
     from apps.main import views as main_views
-    app.register_blueprint(main_views.main, url_prefix='/')
+    app.register_blueprint(main_views.main, url_prefix='/main')
+
+    from apps.personal import views as personal_views
+    app.register_blueprint(personal_views.personal, url_prefix='/personal')
+
 
     return app
