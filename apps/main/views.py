@@ -20,13 +20,13 @@ def normalize_name(name):
 def dataframe_to_html(df):
     html = '<table class="table table-striped">\n'
     html += "<thead>\n<tr>"
-    for column in ['제목', '가격', '이미지', '위치', '시간']:
+    for column in ['제목', '가격', '이미지']:
         html += f"<th>{column}</th>"
     html += "</tr>\n</thead>\n<tbody>\n"
 
     for _, row in df.iterrows():
         html += f'<tr data-product-id="{row["pid"]}">'
-        for column in df.columns[[1,2,3,4,5]]:
+        for column in df.columns[[1,2,3]]:
             value = row[column]
             if column == "product_image":
                 html += f'<td><img src="{value}" alt="Product Image" width="100"></td>'
@@ -125,6 +125,7 @@ def index():
                 db.session.add(product)
         db.session.commit()
 
+        
         # HTML 변환
         ipdf_html = dataframe_to_html(ipdf)
 
