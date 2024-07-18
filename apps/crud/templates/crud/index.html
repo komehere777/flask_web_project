@@ -113,7 +113,7 @@
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
-                font-weight: bold;
+                font-weight: bold.
             }
         }
     </style>
@@ -141,6 +141,7 @@
                     <td data-label="작업" class="action-buttons">
                         <a href="{{ url_for('crud.edit_user', user_id=user.id) }}" class="btn btn-edit">편집</a>
                         <form action="{{ url_for('crud.delete_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
                         </form>

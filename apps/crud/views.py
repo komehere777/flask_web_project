@@ -63,4 +63,12 @@ def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     db.session.delete(user)
     db.session.commit()
-    return redirect(url_for('crud.users'))
+    return redirect(url_for('crud.users', user=user))
+
+
+@crud.route("/debug-csrf")
+def debug_csrf():
+    from flask_wtf.csrf import generate_csrf
+
+    csrf_token = generate_csrf()
+    return csrf_token

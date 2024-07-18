@@ -8,7 +8,7 @@ from apps.config import config
 
 
 db = SQLAlchemy()
-csrf = CSRFProtect()
+
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.login_message = ''
@@ -17,6 +17,7 @@ login_manager.login_message = ''
 def create_app(config_key):
     app = Flask(__name__)
     app.config.from_object(config[config_key])
+    csrf = CSRFProtect(app)
     csrf.init_app(app)
     db.init_app(app)
     Migrate(app, db)
@@ -43,12 +44,11 @@ def create_app(config_key):
 
     from apps.auth import views as auth_views
     app.register_blueprint(auth_views.auth, url_prefix='/auth')
-    
+
     from apps.main import views as main_views
     app.register_blueprint(main_views.main, url_prefix='/main')
 
     from apps.personal import views as personal_views
     app.register_blueprint(personal_views.personal, url_prefix='/personal')
-
 
     return app
