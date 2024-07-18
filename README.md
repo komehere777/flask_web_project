@@ -7,7 +7,7 @@
 ```python
 where python #3.10으로 설정
 C:\Users\Administrator\AppData\Local\Programs\Python\Python310\python.exe -m venv venv  #3.10확인후 venv 설치
-venv/Scripts/activate
+venv\Scripts\activate
 pip install -r requirements.txt
 python.exe -m pip install --upgrade pip
 ```
