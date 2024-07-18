@@ -32,8 +32,7 @@ def dataframe_to_html(df):
                 html += f'<td><img src="{value}" alt="Product Image" width="100"></td>'
             else:
                 html += f"<td>{value}</td>"
-              
-        
+
         html += "</tr>\n"
 
     html += "</tbody>\n</table>"
@@ -102,19 +101,29 @@ def index():
         )
 
         # 데이터베이스에 저장
-        # for index, row in ipdf.iterrows():
-        #     product = Product(
-        #         PID=row["pid"],
-        #         NAME=normalize_name(row["name"]),
-        #         PRICE=row["price"],
-        #         PRODUCT_IMAGE=urllib.parse.unquote(
-        #             row["product_image"]
-        #         ),  # URL 디코딩하여 저장
-        #         LOCATION=row["location"],
-        #         DELTA_TIME=row["update_time"],
-        #     )
-        #     db.session.add(product)
-        # db.session.commit()
+        for index, row in ipdf.iterrows():
+            existing_product = Product.query.filter_by(PID=row["pid"]).first()
+            if existing_product:
+                existing_product.NAME = normalize_name(row["name"])
+                existing_product.PRICE = row["price"]
+                existing_product.PRODUCT_IMAGE = urllib.parse.unquote(
+                    row["product_image"]
+                )
+                existing_product.LOCATION = row["location"]
+                existing_product.DELTA_TIME = row["update_time"]
+            else:
+                product = Product(
+                    PID=row["pid"],
+                    NAME=normalize_name(row["name"]),
+                    PRICE=row["price"],
+                    PRODUCT_IMAGE=urllib.parse.unquote(
+                        row["product_image"]
+                    ),  # URL 디코딩하여 저장
+                    LOCATION=row["location"],
+                    DELTA_TIME=row["update_time"],
+                )
+                db.session.add(product)
+        db.session.commit()
 
         # HTML 변환
         ipdf_html = dataframe_to_html(ipdf)
