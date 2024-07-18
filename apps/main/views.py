@@ -102,19 +102,19 @@ def index():
         )
 
         # 데이터베이스에 저장
-        for index, row in ipdf.iterrows():
-            product = Product(
-                PID=row["pid"],
-                NAME=normalize_name(row["name"]),
-                PRICE=row["price"],
-                PRODUCT_IMAGE=urllib.parse.unquote(
-                    row["product_image"]
-                ),  # URL 디코딩하여 저장
-                LOCATION=row["location"],
-                DELTA_TIME=row["update_time"],
-            )
-            db.session.add(product)
-        db.session.commit()
+        # for index, row in ipdf.iterrows():
+        #     product = Product(
+        #         PID=row["pid"],
+        #         NAME=normalize_name(row["name"]),
+        #         PRICE=row["price"],
+        #         PRODUCT_IMAGE=urllib.parse.unquote(
+        #             row["product_image"]
+        #         ),  # URL 디코딩하여 저장
+        #         LOCATION=row["location"],
+        #         DELTA_TIME=row["update_time"],
+        #     )
+        #     db.session.add(product)
+        # db.session.commit()
 
         # HTML 변환
         ipdf_html = dataframe_to_html(ipdf)
