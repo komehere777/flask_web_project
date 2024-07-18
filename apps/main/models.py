@@ -21,7 +21,7 @@ class Product(db.Model):
         data = pd.read_csv(file_path)
         for index, row in data.iterrows():
             product = Product(
-                ID=uuid.uuid4().int & (1 << 31) - 1,  # Generates a random ID
+                PID=row['PID'],
                 NAME=row['NAME'],
                 PRICE=row['PRICE'],
                 PRODUCT_IMAGE=row['PRODUCT_IMAGE'] if 'PRODUCT_IMAGE' in row and pd.notna(
