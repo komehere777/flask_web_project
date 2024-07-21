@@ -18,15 +18,21 @@
                     <tr>
                         <th>가격</th>
                         <td>{{ "{:,.0f}".format(product.PRICE) }}</td>
-
-                        {#<td>{{ product.PRICE | format(",") }}</td>#}
                     </tr>
                     <tr>
                         <th>위치</th>
                         <td>{{ product.LOCATION }}</td>
                     </tr>
                     <tr>
-                        
+                        <th>추천가격차이</th>
+                        <td>
+                            {% set query = query %}
+                            {% if query in price_dict %}
+                                {{ "{:,.0f}".format(price_dict[query] - product.PRICE) }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
                     </tr>
                 </table>
             </div>

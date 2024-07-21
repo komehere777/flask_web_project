@@ -1,6 +1,4 @@
-# main/views.py
-
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, session
 from flask_login import login_required, current_user
 from apps.main.models import Product
 from apps.personal.models import Wishlist
@@ -26,7 +24,7 @@ def dataframe_to_html(df):
 
     for _, row in df.iterrows():
         html += f'<tr data-product-id="{row["pid"]}">'
-        for column in df.columns[[1,2,3]]:
+        for column in df.columns[[1, 2, 3]]:
             value = row[column]
             if column == "product_image":
                 html += f'<td><img src="{value}" alt="Product Image" width="100"></td>'
@@ -37,6 +35,32 @@ def dataframe_to_html(df):
 
     html += "</tbody>\n</table>"
     return html
+
+
+price_dict = {
+    '아이폰 13 프로 128': 620000,
+    '아이폰 13 프로 256': 698000,
+    '아이폰 13 프로 512': 763000,
+    '아이폰 13 프로 1024': 960000,
+    '아이폰 13 프로 맥스 128': 736000,
+    '아이폰 13 프로 맥스 256': 799000,
+    '아이폰 13 프로 맥스 512': 895000,
+    '아이폰 13 프로 맥스 1024': 955000,
+    '아이폰 14 프로 128': 866000,
+    '아이폰 14 프로 256': 916000,
+    '아이폰 14 프로 512': 1070000,
+    '아이폰 14 프로 1024': 1198000,
+    '아이폰 14 프로 맥스 128': 1081000,
+    '아이폰 14 프로 맥스 256': 1124000,
+    '아이폰 14 프로 맥스 512': 1185000,
+    '아이폰 14 프로 맥스 1024': 1357000,
+    '아이폰 15 프로 128': 1144000,
+    '아이폰 15 프로 256': 1286000,
+    '아이폰 15 프로 512': 1516000,
+    '아이폰 15 프로 맥스 256': 1438000,
+    '아이폰 15 프로 맥스 512': 1696000
+}
+
 
 
 @main.route("/", methods=["GET", "POST"])
@@ -52,6 +76,8 @@ def index():
         query["capacity"] = capacity
         query_str = " ".join([f"{value}" for key, value in query.items()])
         query_str = query_str.replace("GB", "")
+        session['query'] = query_str  # 세션에 쿼리 저장
+        print(f'세션 쿼리 스트링:{session["query"]}')
         columns = [
             "category_id",
             "name",
@@ -125,7 +151,6 @@ def index():
                 db.session.add(product)
         db.session.commit()
 
-        
         # HTML 변환
         ipdf_html = dataframe_to_html(ipdf)
 
@@ -149,12 +174,15 @@ def index():
 def product_detail(pid):
     product = Product.query.filter_by(PID=pid).first()
     print(f'프로덕트 디테일 확인 콘솔:{product}')
+    query = session.get('query', 'No query available')  # 세션에서 쿼리 가져오기
+    print(f'프로덕트 디테일에서 세션 커리 넘어오는지 확인: {query}')
     if product is None:
         flash("Product not found.")
         return redirect(url_for("main.index"))
     form = EmptyForm()
     return render_template(
-        "main/product_detail.html", product=product, user=current_user, form=form
+        "main/product_detail.html", product=product, user=current_user, form=form, query=query,
+        price_dict=price_dict
     )
 
 
@@ -165,7 +193,7 @@ def add_to_wishlist(product_id):
     if form.validate_on_submit():
         product = Product.query.get_or_404(product_id)
         if Wishlist.query.filter_by(
-            user_id=current_user.id, product_id=product_id
+                user_id=current_user.id, product_id=product_id
         ).first():
             flash("This product is already in your wishlist.")
         else:
